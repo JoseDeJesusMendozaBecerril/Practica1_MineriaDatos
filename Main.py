@@ -48,8 +48,8 @@ def main():
     # 3. Regresion Lineal
 
     #Seleccionamos X y Y
-    X = water['T_degC']
-    y = water['Salnty']
+    X = water['Salnty'] #Entrada
+    y = water['T_degC'] #Salida
 
     #plt.scatter(X,y)
     #plt.xlabel('T_degC')
@@ -57,7 +57,7 @@ def main():
     #plt.show()
 
     #Separar los datos en entrenamiento y prueba
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3)
     
     
     
@@ -79,8 +79,8 @@ def main():
     plt.scatter(X_test,y_test)
     plt.plot(X_test,Y_pred,color='red',linewidth=3)
     plt.title('Regresion Lineal Simple')
-    plt.xlabel('T_degC')
-    plt.ylabel('Salnty')
+    plt.xlabel('Salnty')
+    plt.ylabel('T_degC')
     plt.show()
     
 
@@ -89,11 +89,11 @@ def main():
     print("Precision del modelo")
     print(lr.score(X_train,y_train))
 
-    print("Error cuadratico medio")
+    
     print("y_test" , y_test[400])
     print("Y_pred", Y_pred[400])
     mse = mean_squared_error(y_test,Y_pred)
-    print(mse)
+    print("Error cuadratico medio",mse)
 
     #5. Grafica de residuos
     residuos_test  = Y_pred - y_test
