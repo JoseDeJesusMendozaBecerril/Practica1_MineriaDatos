@@ -17,8 +17,8 @@ filename2 = 'mtcars.txt'
 
 
 def main():
-    print("Hola Mundo")
-    #Lectura de datos Water
+    '''
+    # ----------------------------- Lectura de datos Water -------------------
     water = pd.read_csv(filename1, header=0)
     print(water.shape)
     print (water.head(645))
@@ -57,23 +57,27 @@ def main():
     #plt.show()
 
     #Separar los datos en entrenamiento y prueba
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3)
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
     
     
     
     #Definimos algoritmo a utilizar
-    lr= linear_model.LinearRegression()
+    lr = linear_model.LinearRegression()
 
     X_train = X_train.values.reshape(-1,1)
     y_train = y_train.values.reshape(-1,1)
     X_test = X_test.values.reshape(-1,1)
     y_test = y_test.values.reshape(-1,1)
+    
+    print("This is X_train",X_train)
+    print("This is y_train",y_train)
+    
 
     #Entreno el modelo
-    lr.fit(X_train,y_train)
+    lr = lr.fit(X_train,y_train)
     
     #Realizo una prediccion
-    Y_pred = lr.predict(X_test)
+    Y_pred = lr.predict(X_test) #Uso valores de test set
 
     #Graficamos los datos junto con el modelo
     plt.scatter(X_test,y_test)
@@ -90,24 +94,51 @@ def main():
     print(lr.score(X_train,y_train))
 
     
-    print("y_test" , y_test[400])
-    print("Y_pred", Y_pred[400])
     mse = mean_squared_error(y_test,Y_pred)
     print("Error cuadratico medio",mse)
 
     #5. Grafica de residuos
-    residuos_test  = Y_pred - y_test
+    Y_predtrain = lr.predict(X_train) #Uso valores de training set
+
+
+    print("y_train" , y_train[10])
+    print("Y_pred", Y_predtrain[10])
+    
+
+    residuos_test  = y_train - Y_predtrain
     sns.histplot(data = residuos_test)
-    plt.show() #Si existio una distribucion  uniforme
+    plt.show() #Muestra grafica de distribucion
 
 
-
+'''
 #-------------------------------------------------------------------------------------------------------------------
 
-    #Lectura de datos Cars
+    #Lectura de datos Cars  (disp,wt) entrada (hp) salida
+    cars = pd.read_csv(filename2,header=0,sep=" ")
+    print(cars.shape)
+    print (cars.head(32))
+    print(cars.columns)
+
+    #print(cars['disp']) #valores de entrada
+    #print(cars['wt'])
+    #print(cars['hp']) # Valor de salida
+
+
 
     #Limpieza de datos
+    print("\nMedias antes de modificar datos vacios")
+    mediaDisp = cars['disp'].mean()
+    mediaWt = cars['wt'].mean()
+    mediaHp = cars['hp'].mean()
+    print('La media de disp es' , mediaDisp)
+    print('La media de wt es' , mediaWt)
+    print('La media de hp es' , mediaHp)
+    
+    #2. Limpieza de datos - Reparacion de datos no necesaria debido a que no existe NaN
+    
 
-    # a. En caso de haber datos faltantes, reparar los valores empleando la media para el atributo en cuestión. 
+    # 3. Regresion Lineal
+
+    
 
 main()
