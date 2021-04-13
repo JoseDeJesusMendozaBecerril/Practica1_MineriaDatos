@@ -59,7 +59,7 @@ def main():
         fig =plt.figure()
         ax= fig.add_subplot(111,projection='3d')
         ax.scatter(X_test[:,0],X_test[:,1],Y_test[:,0],c='red',marker='o',alpha=0.5 )
-        ax.scatter(xx_pred.flatten(), yy_pred.flatten(), predicted, facecolor=(0,0,0,0),marker='o', s=25, edgecolor='#70b3f0')
+        ax.scatter3D(xx_pred.flatten(), yy_pred.flatten(), predicted, facecolor=(0,0,0,0),marker='o', s=25, edgecolor='#70b3f0')
 
         plt.show()
 

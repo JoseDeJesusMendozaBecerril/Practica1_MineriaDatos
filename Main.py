@@ -17,7 +17,7 @@ filename2 = 'mtcars.txt'
 
 
 def main():
-    '''
+
     # ----------------------------- Lectura de datos Water -------------------
     water = pd.read_csv(filename1, header=0)
     print(water.shape)
@@ -72,22 +72,24 @@ def main():
     print("This is X_train",X_train)
     print("This is y_train",y_train)
     
-
+    
     #Entreno el modelo
     lr = lr.fit(X_train,y_train)
     
     #Realizo una prediccion
     Y_pred = lr.predict(X_test) #Uso valores de test set
 
-    #Graficamos los datos junto con el modelo
-    plt.scatter(X_test,y_test)
-    plt.plot(X_test,Y_pred,color='red',linewidth=3)
-    plt.title('Regresion Lineal Simple')
-    plt.xlabel('Salnty')
-    plt.ylabel('T_degC')
-    plt.show()
-    
+    fig, ax = plt.subplots(3)
 
+    #Graficamos los datos junto con el modelo
+    ax[0].scatter(X_test,y_test)
+    ax[0].plot(X_test,Y_pred,color='red',linewidth=3)
+    ax[0].set_title('Regresion Lineal Simple')
+    ax[0].set_xlabel('Salnty')
+    ax[0].set_ylabel('T_degC')
+  
+    
+ 
     #4. Evaluacion
     #Debido a que el dataset es muy grande se utiliza la metodologia de validacion simple 
     print("Precision del modelo")
@@ -106,14 +108,66 @@ def main():
     
 
     residuos_test  = y_train - Y_predtrain
+    
+    #plt.show() #Muestra grafica de distribucion
+
+    #Calculasmos W
+    m_wlr = 1/residuos_test**2
+    print(m_wlr[:,0] )
+    #Entrenamos el modelo
+    lr = lr.fit(X_train,y_train,sample_weight=m_wlr[:,0])
+    #hacemos una predccion
+    Y_pred = lr.predict(X_test)
+
+    ax[1].scatter(X_test,y_test)
+    ax[1].plot(X_test,Y_pred,color='green',linewidth=3)
+    ax[1].set_title('Regresion Lineal ponderda')
+    ax[1].set_xlabel('Salnty')
+    ax[1].set_ylabel('T_degC')
+
     sns.histplot(data = residuos_test)
-    plt.show() #Muestra grafica de distribucion
+
+    plt.show()
+
+    '''
+    ax[1].scatter(X_test,y_test)
+    ax[1].scatter(X_train,B[:,0],color='green',linewidth=3)
+    ax[1].set_title('Regresion Lineal ponderada')
+    ax[1].set_xlabel('Salnty')
+    ax[1].set_ylabel('T_degC')
+    '''
+
+    #sns.histplot(data = residuos_test)
+    #plt.show()
+    
+
+"""   # solution of linear regression
+    w_lr = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ Y_predtrain
+    print("w_lr: \n",w_lr)
+
+    # calculate residuals
+    res = Y_predtrain - X_train @ w_lr
+    print("res: \n",res) 
+
+    # estimate the covariance matrix
+    
+
+    #w_wlr = np.linalg.inv(X_train.T @ np.linalg.inv(C) @ X) @ (X.T @ np.linalg.inv(C) @ y)
+
+    W = 1/C
+    print("this is weith matrix")
+    print(W)
+    B = X_train.dot(W)
+    print("this is weith matrix")
+    print(B)
+ """
+
+    
 
 
-'''
 #-------------------------------------------------------------------------------------------------------------------
 
-    #Lectura de datos Cars  (disp,wt) entrada (hp) salida
+"""     #Lectura de datos Cars  (disp,wt) entrada (hp) salida
     cars = pd.read_csv(filename2,header=0,sep=" ")
     print(cars.shape)
     print (cars.head(32))
@@ -138,7 +192,7 @@ def main():
     
 
     # 3. Regresion Lineal
-
+"""
     
 
 main()
