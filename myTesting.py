@@ -34,34 +34,47 @@ def main():
     hp = df['hp']
     Y=np.array(hp).T
 
-    
+    print("Input n for validation n-fold cross validation")
+    n = int(input(">>"))
+    kf=KFold(n_splits=n,shuffle=True,random_state=2)
 
-    kf=KFold(n_splits=2,shuffle=True,random_state=2)
+    #Se instancia modelo de regresion lineal
     regr=linear_model.LinearRegression()
 
     for values_x,values_y in kf.split(X):
-
+        #Se obtienen los datos a patir de los arreglos particion por k-fold
         X_train,X_test = X[values_x],X[values_y]
         Y_train,Y_test = Y[values_x],Y[values_y]
-
+        #Se obtienen ajusta la estructura de los datos para ser recibidos por 
         Y_train,Y_test = Y_train.reshape(-1,1),Y_test.reshape(-1,1)
+        #Se entrena al modelo
         regr.fit(X_train,Y_train)
+        #Se hace una preccion con el modelo
         y_pred=regr.predict(X_test)
 
-        print(y_pred,Y_test)
-        print(regr.score(X_train,Y_train) )
-        print(mean_squared_error(Y_test,y_pred) )
+    #Se imprime la ultima prediccion obtenida
+    print(y_pred,Y_test)
+    #Se obtiene la bondad del modelo
+    print(regr.score(X_train,Y_train) )
+    #Se imprime el error cuadratico medio
+    print(mean_squared_error(Y_test,y_pred) )
 
-        xx_pred, yy_pred = np.meshgrid(X_test[:,0], X_test[:,1])
-        model_viz = np.array([xx_pred.flatten(), yy_pred.flatten()]).T
-        predicted = regr.predict(model_viz)
+    #Se da estructura a los datos de test set para poder graficarlos
+    xx_pred, xx1_pred = np.meshgrid(X_test[:,0], X_test[:,1])
+    model_viz = np.array([xx_pred.flatten(), xx1_pred.flatten()]).T
+    #Se obtiene el plano para poder ser graficado a partir de data det test
+    yy_predicted = regr.predict(model_viz)
 
-        fig =plt.figure()
-        ax= fig.add_subplot(111,projection='3d')
-        ax.scatter(X_test[:,0],X_test[:,1],Y_test[:,0],c='red',marker='o',alpha=0.5 )
-        ax.scatter3D(xx_pred.flatten(), yy_pred.flatten(), predicted, facecolor=(0,0,0,0),marker='o', s=25, edgecolor='#70b3f0')
+    #Se define nueva grafica 3d
+    fig =plt.figure()
+    ax= fig.add_subplot(111,projection='3d')
 
-        plt.show()
+    #se grafican los datos del data test
+    ax.scatter(X_test[:,0],X_test[:,1],Y_test[:,0],c='red',marker='o',alpha=0.5 )
+    #se grafican los datos del plano de acuerdo al modelo dado
+    ax.scatter3D(xx_pred.flatten(), xx1_pred.flatten(), yy_predicted, marker='o', s=50, edgecolor='#70b3f0')
+
+    plt.show()
 
     
 main()
