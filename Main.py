@@ -134,12 +134,6 @@ def main():
     plt.show()
 
 
-  
-    
-
-    
-
-
 #------------------------------------------------------Regresion Lineal Multiple -------------------------------------------------------------
     print("******************** modelo RLM ********************\n")
     #Lectura de datos Cars  (disp,wt) entrada (hp) salida
