@@ -55,9 +55,9 @@ def main():
     #Se imprime la ultima prediccion obtenida
     print(y_pred,Y_test)
     #Se obtiene la bondad del modelo
-    print(regr.score(X_train,Y_train) )
+    print("Bondad del modelo", regr.score(X_train,Y_train) )
     #Se imprime el error cuadratico medio
-    print(mean_squared_error(Y_test,y_pred) )
+    print("Error cuadratico medio", mean_squared_error(Y_test,y_pred) )
 
     #Se da estructura a los datos de test set para poder graficarlos
     xx_pred, xx1_pred = np.meshgrid(X_test[:,0], X_test[:,1])
