@@ -20,15 +20,15 @@ filename2 = 'mtcars.txt'
 
 def main():
 
-    # ----------------------------- Lectura de datos Water -------------------
+    # ----------------------------- Lectura de datos Water - Regresion Lineal Simple -------------------
     water = pd.read_csv(filename1, header=0)
-    print(water.shape)
-    print (water.head(645))
+    #print(water.shape)
+    #print (water.head(645))
     #print(data.columns)
 
     #print(data['T_degC'])
     #print(data['Salnty;;'])
-    
+    print("******************** Modelo RLS ********************")
     print("\nMedias antes de modificar datos vacios")
     mediaT_degC = water['T_degC'].mean()
     mediaSalnty = water['Salnty'].mean()
@@ -39,7 +39,7 @@ def main():
     water['T_degC'] = water['T_degC'].replace(np.nan,mediaT_degC)
     water['Salnty'] = water['Salnty'].replace(np.nan,mediaSalnty)
     
-    print (water.head(645))
+    #print (water.head(645))
     
     print("\nMedias despues de modificar datos vacios")
     mediaT_degC = water['T_degC'].mean()
@@ -53,11 +53,7 @@ def main():
     X = water['Salnty'] #Entrada
     y = water['T_degC'] #Salida
 
-    #plt.scatter(X,y)
-    #plt.xlabel('T_degC')
-    #plt.ylabel('Salnty')
-    #plt.show()
-
+    
     #Separar los datos en entrenamiento y prueba
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
     
@@ -71,8 +67,8 @@ def main():
     X_test = X_test.values.reshape(-1,1)
     y_test = y_test.values.reshape(-1,1)
     
-    print("This is X_train",X_train)
-    print("This is y_train",y_train)
+    #print("This is X_train",X_train)
+    #print("This is y_train",y_train)
     
     
     #Entreno el modelo
@@ -94,8 +90,8 @@ def main():
  
     #4. Evaluacion
     #Debido a que el dataset es muy grande se utiliza la metodologia de validacion simple 
-    print("Precision del modelo")
-    print(lr.score(X_train,y_train))
+    
+    print("Bondad:" , lr.score(X_train,y_train))
 
     
     mse = mean_squared_error(y_test,Y_pred)
@@ -105,17 +101,16 @@ def main():
     Y_predtrain = lr.predict(X_train) #Uso valores de training set
 
 
-    print("y_train" , y_train[10])
-    print("Y_pred", Y_predtrain[10])
+    #print("y_train" , y_train[10])
+    #print("Y_pred", Y_predtrain[10])
     
-
     residuos_test  = y_train - Y_predtrain
-    
-    #plt.show() #Muestra grafica de distribucion
+
+# ----------------------------- Lectura de datos Water - Regresion Lineal Ponderada -------------------    
 
     #Calculasmos W
     m_wlr = 1/residuos_test**2
-    print(m_wlr[:,0] )
+    #print(m_wlr[:,0] )
     #Entrenamos el modelo
     lr = lr.fit(X_train,y_train,sample_weight=m_wlr[:,0])
     #hacemos una predccion
@@ -127,48 +122,26 @@ def main():
     ax[1].set_xlabel('Salnty')
     ax[1].set_ylabel('T_degC')
 
+    print("******************** modelo RLP ********************")
+    print("Bondad: ",lr.score(X_train,y_train))
+
+    
+    mse = mean_squared_error(y_test,Y_pred)
+    print("Error cuadratico medio RLP",mse)
+
     sns.histplot(data = residuos_test)
 
     plt.show()
 
-    '''
-    ax[1].scatter(X_test,y_test)
-    ax[1].scatter(X_train,B[:,0],color='green',linewidth=3)
-    ax[1].set_title('Regresion Lineal ponderada')
-    ax[1].set_xlabel('Salnty')
-    ax[1].set_ylabel('T_degC')
-    '''
 
-    #sns.histplot(data = residuos_test)
-    #plt.show()
+  
     
-
-    """   # solution of linear regression
-    w_lr = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ Y_predtrain
-    print("w_lr: \n",w_lr)
-
-    # calculate residuals
-    res = Y_predtrain - X_train @ w_lr
-    print("res: \n",res) 
-
-    # estimate the covariance matrix
-    
-
-    #w_wlr = np.linalg.inv(X_train.T @ np.linalg.inv(C) @ X) @ (X.T @ np.linalg.inv(C) @ y)
-
-    W = 1/C
-    print("this is weith matrix")
-    print(W)
-    B = X_train.dot(W)
-    print("this is weith matrix")
-    print(B)
-    """
 
     
 
 
-#-------------------------------------------------------------------------------------------------------------------
-
+#------------------------------------------------------Regresion Lineal Multiple -------------------------------------------------------------
+    print("******************** modelo RLM ********************\n")
     #Lectura de datos Cars  (disp,wt) entrada (hp) salida
     mtCars = pd.read_csv(filename2,sep=" ",header=0)
     mtCars = mtCars[['disp','hp','wt']]
@@ -209,7 +182,7 @@ def main():
         Y_train,Y_test = Y[values_x],Y[values_y]
         #Se obtienen ajusta la estructura de los datos para ser recibidos por 
         Y_train,Y_test = Y_train.reshape(-1,1),Y_test.reshape(-1,1)
-        print(values_x,values_y)
+        #print(values_x,values_y)
         #Se entrena al modelo
         
         regr.fit(X_train,Y_train)
@@ -217,9 +190,10 @@ def main():
         y_pred=regr.predict(X_test)
 
     #Se imprime la ultima prediccion obtenida
-    print("Datos predecidos\n",y_pred,"\nDatos reales\n",Y_test)
+    #print("Datos predecidos\n",y_pred,"\nDatos reales\n",Y_test)
     #Se obtiene la bondad del modelo
-    print("Bondad del modelo", regr.score(X_train,Y_train) )
+    
+    print("Bondad:", regr.score(X_train,Y_train) )
     #Se imprime el error cuadratico medio
     print("Error cuadratico medio", mean_squared_error(Y_test,y_pred) )
 
